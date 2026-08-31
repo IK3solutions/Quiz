@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuizRush — Host</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#141d30; --panel2:#1c2942; --text:#eaf0fa; --muted:#8aa0c4;
+    --brand:#1fb6a8; --brand2:#38cfc1; --accent:#4f7cff; --good:#2fd58b; --bad:#ff5d7b; --warn:#ffcf5c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(1200px 800px at 20% -10%,#16324a 0%,var(--bg) 55%);color:var(--text);min-height:100vh}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo .bolt{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-size:24px;color:#04231f;box-shadow:0 6px 18px rgba(31,182,168,.4)}
+  h1{font-size:22px;letter-spacing:.3px}
+  .tag{color:var(--muted);font-size:13px}
+  .live{display:inline-flex;align-items:center;gap:7px;background:rgba(47,213,139,.12);color:var(--good);padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 0 rgba(47,213,139,.6);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,213,139,.5)}70%{box-shadow:0 0 0 8px rgba(47,213,139,0)}100%{box-shadow:0 0 0 0 rgba(47,213,139,0)}}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:22px;margin-top:24px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid #26334f;border-radius:18px;padding:22px}
+  .card h2{font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px}
+  .qr{width:320px;height:320px;margin:0 auto;background:#fff;border-radius:14px;padding:12px;display:grid;place-items:center}
+  .qr img{width:100%;height:100%;image-rendering:auto}
+  .joinurl{margin-top:12px;text-align:center;font-size:13px;color:var(--muted);word-break:break-all}
+  .joinurl b{color:var(--brand2)}
+  .countline{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+  .count{font-size:30px;font-weight:800;color:var(--brand2)}
+  .count small{font-size:13px;color:var(--muted);font-weight:600}
+  .btn{border:0;cursor:pointer;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:800;color:#04231f;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 8px 20px rgba(31,182,168,.35);transition:.15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.dim{background:#33405c;color:var(--text);box-shadow:none}
+  .btn gh{background:linear-gradient(135deg,#ff7a59,#ff5d7b);color:#fff;box-shadow:0 8px 20px rgba(255,93,123,.3)}
+  .players{display:flex;flex-direction:column;gap:8px;margin-top:4px;max-height:340px;overflow:auto}
+  .prow{display:flex;align-items:center;justify-content:space-between;background:#0f1930;border:1px solid #25324f;border-radius:10px;padding:10px 14px}
+  .prow .n{font-weight:700}
+  .prow .s{color:var(--brand2);font-weight:800}
+  .empty{color:var(--muted);font-size:14px;text-align:center;padding:20px}
+  /* Quiz view */
+  .qhead{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:10px}
+  .qnum{font-size:14px;color:var(--muted);font-weight:700}
+  .timerbar{height:12px;background:#0f1930;border-radius:999px;overflow:hidden;border:1px solid #26334f}
+  .timerfill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:999px;transition:width .2s linear}
+  .qtext{font-size:26px;font-weight:800;line-height:1.3;margin:16px 0 22px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:700px){.opts{grid-template-columns:1fr}}
+  .opt{background:#0f1930;border:1px solid #26334f;border-radius:14px;padding:20px 22px;font-size:18px;font-weight:700;display:flex;gap:14px;align-items:center}
+  .opt .key{width:36px;height:36px;border-radius:9px;background:#26334f;display:grid;place-items:center;font-weight:800;color:var(--brand2);flex:none}
+  .answeredbar{margin-top:18px;color:var(--muted);font-size:14px}
+  .answeredbar b{color:var(--text)}
+  .revealMsg{font-size:20px;font-weight:800;margin-top:10px}
+  .good{color:var(--good)} .bad{color:var(--bad)}
+  .leader{display:flex;flex-direction:column;gap:10px}
+  .lrow{display:flex;align-items:center;gap:14px;background:#0f1930;border:1px solid #25324f;border-radius:12px;padding:12px 16px}
+  .lrow.top{background:linear-gradient(135deg,rgba(31,182,168,.18),rgba(79,124,255,.14));border-color:rgba(31,182,168,.5);box-shadow:0 8px 24px rgba(31,182,168,.2)}
+  .lrow .rank{width:42px;height:42px;border-radius:10px;background:#26334f;display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+  .lrow.top .rank{background:linear-gradient(135deg,var(--warn),#ff9d2e);color:#3a2500}
+  .lrow .nm{font-weight:800;flex:1}
+  .lrow .sc{font-weight:800;color:var(--brand2);font-size:20px}
+  .winner{text-align:center;padding:20px 0}
+  .winner .cup{font-size:64px}
+  .winner h2{font-size:30px;margin:8px 0 4px;color:var(--brand2);text-transform:none;letter-spacing:0}
+  .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+  .hidden{display:none!important}
+  /* reveal tally */
+  .tally{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .tally .col{background:#0f1930;border:1px solid #26334f;border-radius:12px;padding:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .chips .c{padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700}
+  .chip-ok{background:rgba(47,213,139,.15);color:var(--good)}
+  .chip-no{background:rgba(255,93,123,.14);color:var(--bad)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <div class="bolt">⚡</div>
+      <div>
+        <h1>QuizRush</h1>
+        <div class="tag">Endpoint Security × Trend Micro · Time-based rapid quiz</div>
+      </div>
+    </div>
+    <div class="live"><span class="dot"></span> LIVE &nbsp;<span id="liveCount">0 players</span></div>
+  </header>
+
+  <div class="grid">
+    <!-- LEFT: QR / lobby -->
+    <div class="card" id="qrCard">
+      <h2 id="qrTitle">Join the quiz</h2>
+      <div class="qr"><img id="qrImg" alt="QR code to join"></div>
+      <div class="joinurl">Scan to join at <b id="joinUrl">…</b></div>
+      <div class="countline">
+        <div class="count"><span id="playerCount">0</span> <small>players in lobby</small></div>
+        <button class="btn" id="startBtn">Start Quiz ▶</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: live area -->
+    <div class="card">
+      <h2 id="rightTitle">Lobby</h2>
+
+      <!-- LOBBY -->
+      <div id="lobby" class="players">
+        <div class="empty" id="lobbyEmpty">Waiting for players to scan the QR code…</div>
+      </div>
+
+      <!-- QUESTION -->
+      <div id="quiz" class="hidden">
+        <div class="qhead">
+          <div class="qnum" id="qnum">Question 1 / 10</div>
+          <div class="qnum" id="qTimer"></div>
+        </div>
+        <div class="timerbar"><div class="timerfill" id="timerfill" style="width:100%"></div></div>
+        <div class="qtext" id="qtext"></div>
+        <div class="opts" id="opts"></div>
+        <div class="answeredbar"><b id="answered">0</b> / <span id="pcount">0</span> answered</div>
+      </div>
+
+      <!-- REVEAL -->
+      <div id="reveal" class="hidden">
+        <div class="qnum" id="rnum">Question 1 / 10</div>
+        <div class="qtext" id="rtext"></div>
+        <div class="revealMsg" id="revealMsg"></div>
+        <div class="tally" id="tally"></div>
+        <div class="btns">
+          <button class="btn" id="nextBtn">Next Question ▶</button>
+          <button class="btn dim" id="endBtn">End Game</button>
+        </div>
+      </div>
+
+      <!-- GAME OVER -->
+      <div id="over" class="hidden">
+        <div class="winner" id="winnerBlock"></div>
+        <h2 style="color:var(--muted);text-transform:uppercase;font-size:13px;letter-spacing:1.2px;margin:8px 0">Final leaderboard</h2>
+        <div class="leader" id="finalBoard"></div>
+        <div class="btns">
+          <button class="btn" id="againBtn">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const wsProto=location.protocol==='https:'?'wss':'ws';
+const sock=new WebSocket(`${wsProto}://${location.host}`);
+let hostState=null;
+let rankified=[];
+
+// ---- QR ----
+fetch('/api/qr').then(r=>r.json()).then(d=>{
+  $('#qrImg').src=d.dataUrl; $('#joinUrl').textContent=d.url;
+});
+
+// ---- helpers ----
+const shapes=['A','B','C','D'];
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+function renderLobby(){
+  $('#lobby').innerHTML='';
+  const list=hostState.players;
+  if(!list.length){$('#lobby').appendChild(el('div','empty','Waiting for players to scan the QR code…'));}
+  else{list.forEach(p=>{const r=el('div','prow');r.appendChild(el('span','n',escapeHtml(p.name)));r.appendChild(el('span','s',p.score+' pts'));$('#lobby').appendChild(r);});}
+  $('#playerCount').textContent=hostState.playerCount;
+  $('#startBtn').disabled=hostState.playerCount===0;
+}
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+let localQ=null, localStart=0, localTime=20, ticker=null;
+
+function renderQuestion(){
+  localQ=hostState.current; localStart=hostState.qStart; localTime=hostState.qTime;
+  const q=hostState.currentQuestion||qCache[hostState.current];
+  if(!q){return;}
+  $('#qnum').textContent=`Question ${hostState.current+1} / ${hostState.total}`;
+  $('#qtext').textContent=q.text;
+  $('#opts').innerHTML='';
+  q.options.forEach((o,i)=>{$('#opts').appendChild(el('div','opt',`<span class="key">${shapes[i]}</span><span>${escapeHtml(o)}</span>`));});
+  $('#pcount').textContent=hostState.playerCount;
+  $('#answered').textContent=hostState.answerCount;
+  startTicker();
+}
+
+function startTicker(){
+  clearInterval(ticker);
+  const draw=()=>{
+    const remaining=Math.max(0,localTime-(Date.now()-localStart)/1000);
+    $('#qTimer').textContent=Math.ceil(remaining)+'s';
+    $('#timerfill').style.width=(remaining/localTime*100)+'%';
+    if(remaining<=4){$('#timerfill').style.background='linear-gradient(90deg,#ff5d7b,#ffcf5c)';}
+    else{$('#timerfill').style.background='linear-gradient(90deg,var(--brand),var(--brand2))';}
+  };
+  draw(); ticker=setInterval(draw,200);
+}
+
+let qCache={};
+
+function show(section){
+  ['lobby','quiz','reveal','over'].forEach(s=>$('#'+s).classList.add('hidden'));
+  if(section)$('#'+section).classList.remove('hidden');
+}
+
+function renderReveal(){
+  const r=revealCache||{};
+  $('#rnum').textContent=`Question ${(hostState.current+1)} / ${hostState.total}`;
+  $('#rtext').textContent=r.text||'';
+  $('#revealMsg').innerHTML=`Correct answer: <b style="color:#fff">${shapes[r.correct]} — ${escapeHtml(r.options?r.options[r.correct]:'')}</b>`;
+  // tally
+  const optEls=$('#tally'); optEls.innerHTML='';
+  (hostState.players||[]).forEach(p=>{
+    const col=el('div','col');
+    const res=(r.results||[]).find(x=>x.pid===p.id);
+    const ok=res&&res.correct;
+    col.appendChild(el('div','qnum',escapeHtml(p.name)));
+    col.appendChild(el('div','revealMsg '+(ok?'good':'bad'),ok?('+'+res.gained+' pts'):'—'));
+    optEls.appendChild(col);
+  });
+  // next button label
+  $('#nextBtn').textContent = (hostState.current+1<hostState.total)?'Next Question ▶':'Finish & Show Winner 🏆';
+}
+
+function renderOver(){
+  const ranked=[...hostState.players].sort((a,b)=>b.score-a.score);
+  const fb=$('#finalBoard'); fb.innerHTML='';
+  ranked.forEach((p,i)=>{
+    const r=el('div','lrow'+(i===0?' top':''));
+    r.appendChild(el('div','rank',(i+1)));
+    r.appendChild(el('div','nm',escapeHtml(p.name)));
+    r.appendChild(el('div','sc',p.score+' pts'));
+    fb.appendChild(r);
+  });
+  const w=ranked[0];
+  if(w){$('#winnerBlock').innerHTML=`<div class="cup">🏆</div><h2>${escapeHtml(w.name)} wins!</h2><div style="color:var(--muted)">${w.score} points · ${ranked.length} player${ranked.length!==1?'s':''}</div>`;}
+  else{$('#winnerBlock').innerHTML='<div class="cup">🏁</div><h2>Game over</h2>';}
+}
+
+function switchView(){
+  if(!hostState)return;
+  const ph=hostState.phase;
+  if(ph==='lobby'){show('lobby');renderLobby();}
+  else if(ph==='question'){show('quiz');renderQuestion();}
+  else if(ph==='reveal'){show('reveal');renderReveal();}
+  else if(ph==='gameover'){show('over');renderOver();}
+}
+
+sock.onmessage=e=>{
+  const m=JSON.parse(e.data);
+  if(m.type==='hostState'){hostState=m;switchView();$('#liveCount').textContent=m.playerCount+' players';}
+  else if(m.type==='question'){qCache[m.index]={text:m.text,options:m.options,time:m.time};}
+  else if(m.type==='reveal'){revealCache=m;}
+};
+
+let revealCache=null;
+
+sock.onopen=()=>sock.send(JSON.stringify({type:'joinHost'}));
+
+$('#startBtn').onclick=()=>sock.send(JSON.stringify({type:'ctrl',action:'start'}));
+$('#nextBtn').onclick=()=>{
+  if(hostState&&hostState.current+1<hostState.total)sock.send(JSON.stringify({type:'ctrl',action:'next'}));
+  else sock.send(JSON.stringify({type:'ctrl',action:'end'}));
+};
+$('#endBtn').onclick=()=>sock.send(JSON.stringify({type:'ctrl',action:'end'}));
+$('#againBtn').onclick=()=>sock.send(JSON.stringify({type:'ctrl',action:'reset'}));
+</script>
+</body>
+</html>
