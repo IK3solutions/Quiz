@@ -3,31 +3,83 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QuizRush — Endpoint Security × Trend Micro</title>
+<title>IK3 Community — Security Quiz</title>
 <style>
-  :root{--brand:#1fb6a8;--brand2:#38cfc1;--bg:#0b1220;--panel:#141d30;--text:#eaf0fa;--muted:#8aa0c4;--accent:#4f7cff}
+  :root{
+    --bg:#07111f;
+    --bg2:#0b1b31;
+    --panel:rgba(13,28,49,.88);
+    --panel2:rgba(16,39,67,.78);
+    --panel3:#102746;
+    --line:rgba(124,180,229,.16);
+    --line-strong:rgba(66,211,235,.35);
+    --text:#f4fbff;
+    --muted:#91abc4;
+    --brand:#20d5d9;
+    --brand2:#4fc3ff;
+    --accent:#7d8cff;
+    --good:#42e3a5;
+    --bad:#ff6f8f;
+    --warn:#ffd166;
+    --shadow:0 24px 70px rgba(0,0,0,.34);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(1100px 800px at 50% -10%,#16324a 0%,var(--bg) 55%);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-  .wrap{text-align:center;max-width:520px}
-  .bolt{width:70px;height:70px;border-radius:18px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-size:38px;color:#04231f;margin:0 auto 20px;box-shadow:0 12px 30px rgba(31,182,168,.4)}
-  h1{font-size:30px;letter-spacing:.5px}
-  .tag{color:var(--muted);margin-top:8px;font-size:14px}
-  .btns{display:flex;flex-direction:column;gap:14px;margin-top:36px}
-  a.btn{display:block;text-decoration:none;border-radius:14px;padding:18px;font-size:18px;font-weight:800;color:#04231f;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 10px 24px rgba(31,182,168,.35)}
-  a.btn.alt{background:#1c2942;color:var(--text);box-shadow:none}
-  .foot{margin-top:30px;color:var(--muted);font-size:13px}
+  html{background:var(--bg)}
+  body{
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:
+      radial-gradient(900px 600px at 8% -10%,rgba(55,178,255,.20),transparent 58%),
+      radial-gradient(1000px 700px at 95% 0%,rgba(32,213,217,.12),transparent 55%),
+      linear-gradient(180deg,#081729 0%,#06101e 100%);
+    color:var(--text);min-height:100vh;
+  }
+  body:before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;
+    background-image:linear-gradient(rgba(255,255,255,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.7) 1px,transparent 1px);
+    background-size:36px 36px;
+  }
+  button,input{font:inherit}
+  
+  body{display:flex;align-items:center;justify-content:center;padding:22px}
+  .wrap{width:100%;max-width:720px}
+  .hero{
+    text-align:center;padding:38px 34px 34px;
+    background:linear-gradient(180deg,rgba(15,36,62,.93),rgba(10,26,46,.86));
+    border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);backdrop-filter:blur(16px)
+  }
+  .brandmark{width:92px;height:92px;object-fit:cover;border-radius:24px;display:block;margin:0 auto 20px;border:1px solid rgba(124,180,229,.24);box-shadow:0 18px 45px rgba(0,0,0,.30)}
+  .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.7px;color:var(--brand);font-weight:850}
+  h1{font-size:36px;letter-spacing:.2px;margin-top:8px}
+  .tag{color:var(--muted);margin:9px auto 0;font-size:14px;line-height:1.5;max-width:560px}
+  .btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+  a.btn{display:block;text-decoration:none;border:1px solid transparent;border-radius:13px;padding:16px;font-size:16px;font-weight:850;color:#03151d;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 10px 24px rgba(32,213,217,.22);transition:.15s}
+  a.btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(32,213,217,.28)}
+  a.btn.alt{background:rgba(92,130,165,.10);border-color:var(--line);color:var(--text);box-shadow:none}
+  .foot{margin-top:25px;color:var(--muted);font-size:12px;line-height:1.5}
+  .trust{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .trust span{font-size:11px;color:#88a5bf;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02)}
+  @media(max-width:600px){.hero{padding:30px 20px}.btns{grid-template-columns:1fr}h1{font-size:30px}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="bolt">⚡</div>
-  <h1>QuizRush</h1>
-  <div class="tag">Rapid-fire quiz · Endpoint Security × Trend Micro · 10 timed questions</div>
-  <div class="btns">
-    <a class="btn" href="/host">🎤 Open Presenter (Host) Screen</a>
-    <a class="btn alt" href="/play">📱 Join as a Player</a>
-  </div>
-  <div class="foot">Players scan the QR code shown on the host screen to join. Score points by answering correctly and fast!</div>
+  <section class="hero">
+    <img class="brandmark" src="/gravityzone-logo.jpg" alt="Bitdefender GravityZone">
+    <div class="eyebrow">Security Awareness Challenge</div>
+    <h1>IK3 Community Quiz</h1>
+    <div class="tag">A quiz to test your knowledge of endpoint protection, security policies, threat detection, and everyday cybersecurity basics.</div>
+    <div class="btns">
+      <a class="btn" href="/host">🎤 Open Host Screen</a>
+      <a class="btn alt" href="/play">📱 Join as Player</a>
+    </div>
+    <div class="trust">
+      <span>10 timed questions</span>
+      <span>Live leaderboard</span>
+      <span>Speed + accuracy scoring</span>
+    </div>
+    <div class="foot">Players scan the QR code shown on the host screen to join. Choose the right answer quickly to climb the leaderboard.</div>
+  </section>
 </div>
 </body>
 </html>
