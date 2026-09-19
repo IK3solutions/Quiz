@@ -1,171 +1,187 @@
 // IK3 Community — Basic Cybersecurity Rapid Round
 // Short, simple and funny questions for a fast live quiz.
+// Correct answers are randomized across positions 1–4.
+
 // Each question: text, options[4], correct (0-based), time (seconds).
 
 const QUESTIONS = [
   {
     text: "What is phishing?",
     options: [
-      "A game",
-      "A fake message to steal information",
       "A firewall",
-      "An antivirus"
+      "An antivirus",
+      "A game",
+      "A fake message to steal information"
     ],
-    correct: 1,
+    correct: 3,
     time: 12
   },
+
   {
     text: "Which password is safer?",
     options: [
-      "123456",
-      "password",
       "T!ger#92",
-      "111111"
+      "123456",
+      "111111",
+      "password"
     ],
-    correct: 2,
+    correct: 0,
     time: 10
   },
+
   {
     text: "What should you do with a strange link?",
     options: [
-      "Click it",
-      "Share it",
+      "Open it quickly",
       "Check it first",
-      "Open it quickly"
+      "Click it",
+      "Share it"
     ],
-    correct: 2,
+    correct: 1,
     time: 10
   },
+
   {
     text: "What does MFA do?",
     options: [
-      "Makes Wi-Fi faster",
-      "Adds extra login security",
       "Deletes viruses",
-      "Increases storage"
+      "Increases storage",
+      "Makes Wi-Fi faster",
+      "Adds extra login security"
     ],
-    correct: 1,
+    correct: 3,
     time: 10
   },
+
   {
     text: "What is ransomware?",
     options: [
-      "A game",
-      "Malware that locks your files",
       "An antivirus",
-      "A browser"
+      "A browser",
+      "Malware that locks your files",
+      "A game"
     ],
-    correct: 1,
+    correct: 2,
     time: 12
   },
+
   {
     text: "What should you do with a strange USB?",
     options: [
-      "Plug it in",
       "Do not use it",
-      "Share it",
-      "Format your PC"
+      "Format your PC",
+      "Plug it in",
+      "Share it"
     ],
-    correct: 1,
+    correct: 0,
     time: 10
   },
+
   {
     text: "What does a firewall mainly protect?",
     options: [
-      "Your chair",
-      "Your keyboard",
+      "Your coffee",
       "Your network",
-      "Your coffee"
-    ],
-    correct: 2,
-    time: 10
-  },
-  {
-    text: "Should you share your OTP?",
-    options: [
-      "Yes",
-      "Only with friends",
-      "Only on WhatsApp",
-      "No"
-    ],
-    correct: 3,
-    time: 10
-  },
-  {
-    text: "What should you do with a suspicious email?",
-    options: [
-      "Click the link",
-      "Reply immediately",
-      "Check the sender",
-      "Forward it"
-    ],
-    correct: 2,
-    time: 10
-  },
-  {
-    text: "Which one is malware?",
-    options: [
-      "Ransomware",
-      "Virus",
-      "Trojan",
-      "All of these"
-    ],
-    correct: 3,
-    time: 10
-  },
-  {
-    text: "Should you use the same password everywhere?",
-    options: [
-      "Yes",
-      "No",
-      "Only for social media",
-      "Only at work"
+      "Your chair",
+      "Your keyboard"
     ],
     correct: 1,
     time: 10
   },
+
+  {
+    text: "Should you share your OTP?",
+    options: [
+      "Only on WhatsApp",
+      "No",
+      "Yes",
+      "Only with friends"
+    ],
+    correct: 1,
+    time: 10
+  },
+
+  {
+    text: "What should you do with a suspicious email?",
+    options: [
+      "Check the sender",
+      "Forward it",
+      "Click the link",
+      "Reply immediately"
+    ],
+    correct: 0,
+    time: 10
+  },
+
+  {
+    text: "Which one is malware?",
+    options: [
+      "Virus",
+      "All of these",
+      "Trojan",
+      "Ransomware"
+    ],
+    correct: 1,
+    time: 10
+  },
+
+  {
+    text: "Should you use the same password everywhere?",
+    options: [
+      "Only at work",
+      "Yes",
+      "No",
+      "Only for social media"
+    ],
+    correct: 2,
+    time: 10
+  },
+
   {
     text: "You get a message: You won ₹10 Lakhs! What do you do?",
     options: [
-      "Click immediately",
-      "Send bank details",
+      "Share with friends",
       "Check if it is real",
-      "Share with friends"
+      "Click immediately",
+      "Send bank details"
     ],
-    correct: 2,
+    correct: 1,
     time: 12
   },
+
   {
     text: "What should you do after using a public computer?",
     options: [
-      "Leave it logged in",
       "Save your password",
+      "Give it to a friend",
       "Log out",
-      "Give it to a friend"
+      "Leave it logged in"
     ],
     correct: 2,
     time: 10
   },
+
   {
     text: "What should you do with an unknown email attachment?",
     options: [
-      "Open it",
-      "Download it",
+      "Forward it",
       "Do not open it",
-      "Forward it"
+      "Download it",
+      "Open it"
     ],
-    correct: 2,
+    correct: 1,
     time: 10
   },
+
   {
     text: "Who is responsible for cybersecurity?",
     options: [
-      "Only the IT team",
       "Only the firewall",
-      "Only the security team",
-      "Everyone"
+      "Everyone",
+      "Only the IT team",
+      "Only the security team"
     ],
-    correct: 3,
+    correct: 1,
     time: 10
   }
 ];
